@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "StarfieldWwizard (Unpackaged)": {
+        "commandName": "Project"
+      },
+      "StarfieldWwizard (Package)": {
+        "commandName": "MsixPackage"
+      }
+    }
+}
