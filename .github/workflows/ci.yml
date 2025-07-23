@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         with:
-          name: starfieldvt-${{ matrix.platform }}-${{ env.SHORT_SHA }}
+          name: StarfieldWwizard-${{ matrix.platform }}-${{ env.SHORT_SHA }}
           path: ${{ env.Wap_Project_Directory }}\bin\${{ matrix.platform }}\${{ matrix.configuration }}
 
   release:
@@ -106,7 +106,7 @@ jobs:
         run: ls -l
       - name: Zip Artifacts
         run: |
-          for dir in starfieldvt-*; do
+          for dir in StarfieldWwizard-*; do
             if [ -d "$dir" ]; then
               platform=$(echo $dir | cut -d'-' -f2)
               cd "$dir"
