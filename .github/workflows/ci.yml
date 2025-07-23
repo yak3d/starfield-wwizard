@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x64, x86]  # Added platform matrix
+        platform: [x64, arm64]  # Added platform matrix
 
     runs-on: windows-latest
 
@@ -69,6 +69,9 @@ jobs:
 
       - name: Remove the pfx
         run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
+
+      - name: ls files
+        run: ls
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
