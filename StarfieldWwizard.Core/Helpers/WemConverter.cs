@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
 using Windows.Storage;
-using BnkExtractor;
 using FFMpegCore;
 using Serilog;
 
@@ -11,22 +10,6 @@ namespace StarfieldWwizard.Core.Helpers;
 
 public static class WemConverter
 {
-    public static string ConvertAndSaveWem2Ogg(byte[] wemBytes)
-    {
-        var tempWemPath = Path.ChangeExtension(Path.GetTempFileName(), "wem");
-        
-        Log.Information("Saving wem to {0}", tempWemPath);
-        
-        using (var fs = new FileStream(tempWemPath, FileMode.Create, FileAccess.Write))
-        {
-            fs.Write(wemBytes);
-            fs.Close();
-        }
-        
-        Extractor.ConvertWem(tempWemPath);
-        return Path.ChangeExtension(tempWemPath, "ogg");
-    }
-
     public static string Wem2Wav(byte[] wemBytes)
     {
         var wemHash = Convert.ToHexString(MD5.HashData(wemBytes));
