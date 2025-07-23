@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarfieldWwizard.Core", "St
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarfieldWwizard.Tests.MSTest", "StarfieldWwizard.Tests.MSTest\StarfieldWwizard.Tests.MSTest.csproj", "{EF93A53E-5457-42E8-A4FA-8C35E532538B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BnkExtractor", "BnkExtractor\BnkExtractor\BnkExtractor.csproj", "{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|arm64 = Debug|arm64
@@ -63,18 +61,6 @@ Global
 		{EF93A53E-5457-42E8-A4FA-8C35E532538B}.Release|x64.Build.0 = Release|x64
 		{EF93A53E-5457-42E8-A4FA-8C35E532538B}.Release|x86.ActiveCfg = Release|x86
 		{EF93A53E-5457-42E8-A4FA-8C35E532538B}.Release|x86.Build.0 = Release|x86
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Debug|arm64.Build.0 = Debug|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Debug|x64.Build.0 = Debug|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Debug|x86.Build.0 = Debug|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Release|arm64.ActiveCfg = Release|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Release|arm64.Build.0 = Release|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Release|x64.ActiveCfg = Release|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Release|x64.Build.0 = Release|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Release|x86.ActiveCfg = Release|Any CPU
-		{5A6C7FCD-B271-442F-A7B9-0E636ABBF0B4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
