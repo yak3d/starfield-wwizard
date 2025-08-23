@@ -1,19 +1,15 @@
 ﻿using System.Reflection;
 using System.Windows.Input;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-
-using Microsoft.UI.Xaml;
-
-using StarfieldWwizard.Contracts.Services;
-using StarfieldWwizard.Helpers;
-
-using Windows.ApplicationModel;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Serilog;
+using StarfieldWwizard.Contracts.Services;
+using StarfieldWwizard.Helpers;
+using Windows.ApplicationModel;
 
 namespace StarfieldWwizard.ViewModels;
 
@@ -23,24 +19,54 @@ public partial class SettingsViewModel : ObservableRecipient
     private readonly IStarfieldDataDirectoryService _starfieldDataDirectoryService;
 
     [ObservableProperty]
-    private ElementTheme _elementTheme;
+    public partial ElementTheme ElementTheme
+    {
+        get;
+        set;
+    }
 
     [ObservableProperty]
-    private string _versionDescription;
+    public partial string VersionDescription
+    {
+        get;
+        set;
+    }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SetStarfieldDataDirectoryCommand))]
-    private string _starfieldDataDirectory;
-    
-    [ObservableProperty]
-    private bool _starfieldDataDirectoryErrorIsOpen;
-    
-    [ObservableProperty]
-    private string _starfieldDataDirectoryErrorType;
+    public partial string StarfieldDataDirectory
+    {
+        get;
+        set;
+    }
 
-    [ObservableProperty] private Brush _starfieldDataDirectoryTextboxColor;
+    [ObservableProperty]
+    public partial bool StarfieldDataDirectoryErrorIsOpen
+    {
+        get;
+        set;
+    }
 
-    [ObservableProperty] private string _starfieldDataDirectoryErrorMessage;
+    [ObservableProperty]
+    public partial string StarfieldDataDirectoryErrorType
+    {
+        get;
+        set;
+    }
+
+    [ObservableProperty]
+    public partial Brush StarfieldDataDirectoryTextboxColor
+    {
+        get;
+        set;
+    }
+
+    [ObservableProperty]
+    public partial string StarfieldDataDirectoryErrorMessage
+    {
+        get;
+        set;
+    }
 
     partial void OnStarfieldDataDirectoryChanged(string value)
     {
@@ -67,38 +93,34 @@ public partial class SettingsViewModel : ObservableRecipient
     public async Task SetStarfieldDataDirectory()
     {
         StarfieldDataDirectoryErrorIsOpen = false;
-            if (!string.IsNullOrEmpty(StarfieldDataDirectory))
+        if (!string.IsNullOrEmpty(StarfieldDataDirectory))
+        {
+            try
             {
-                try
-                {
-                    await _starfieldDataDirectoryService.SetDataDirectoryAsync(StarfieldDataDirectory);
-                }
-                catch (FileNotFoundException ex)
-                {
-                    Log.Error("{0}", ex);
-                    StarfieldDataDirectoryErrorIsOpen = true;
-                    StarfieldDataDirectoryErrorType = "Error Setting Data Directory";
-                    StarfieldDataDirectoryErrorMessage = "The directory below does not exist.";
-                }
+                await _starfieldDataDirectoryService.SetDataDirectoryAsync(StarfieldDataDirectory);
             }
+            catch (FileNotFoundException ex)
+            {
+                Log.Error("{0}", ex);
+                StarfieldDataDirectoryErrorIsOpen = true;
+                StarfieldDataDirectoryErrorType = "Error Setting Data Directory";
+                StarfieldDataDirectoryErrorMessage = "The directory below does not exist.";
+            }
+        }
     }
-    
+
     public SettingsViewModel(
         IThemeSelectorService themeSelectorService,
         IStarfieldDataDirectoryService starfieldDataDirectoryService)
     {
         _themeSelectorService = themeSelectorService;
         _starfieldDataDirectoryService = starfieldDataDirectoryService;
-
-        _elementTheme = _themeSelectorService.Theme;
-        
-        _starfieldDataDirectory = _starfieldDataDirectoryService.StarfieldDataDirectory;
-
-        _starfieldDataDirectoryErrorIsOpen = false;
-        _starfieldDataDirectoryErrorType = string.Empty;
-        _starfieldDataDirectoryErrorMessage = string.Empty;
-
-        _versionDescription = GetVersionDescription();
+        ElementTheme = _themeSelectorService.Theme;
+        StarfieldDataDirectory = _starfieldDataDirectoryService.StarfieldDataDirectory;
+        StarfieldDataDirectoryErrorIsOpen = false;
+        StarfieldDataDirectoryErrorType = string.Empty;
+        StarfieldDataDirectoryErrorMessage = string.Empty;
+        VersionDescription = GetVersionDescription();
 
         SwitchThemeCommand = new RelayCommand<ElementTheme>(
             async (param) =>

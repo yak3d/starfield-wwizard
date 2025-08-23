@@ -11,7 +11,7 @@ public class VgmStreamService : IVgmStreamService
 {
     private readonly string vgmDownloadUrl =
         "https://github.com/vgmstream/vgmstream/releases/download/r2023/vgmstream-win64.zip";
-    
+
     [DllImport("shlwapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
     static extern bool PathFindOnPath([In, Out] StringBuilder pszFile, [In] string[] ppszOtherDirs);
 
@@ -40,7 +40,7 @@ public class VgmStreamService : IVgmStreamService
             using var httpClient = new HttpClient();
             var dlPath = AppContext.BaseDirectory;
             await using var stream = await httpClient.GetStreamAsync(vgmDownloadUrl);
-            
+
             var vgmStreamZipPath = Path.Combine(dlPath, "vgmstream-win64.zip");
             await using var fileWriter = File.OpenWrite(vgmStreamZipPath);
             await stream.CopyToAsync(fileWriter);

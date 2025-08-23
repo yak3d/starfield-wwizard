@@ -18,8 +18,8 @@ public sealed partial class ListDetailsPage : Page
         InitializeComponent();
         SfxMpe.SetMediaPlayer(ViewModel.Player);
     }
-    
-    
+
+
 
 
 

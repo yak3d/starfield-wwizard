@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using StarfieldWwizard.Activation;
 using StarfieldWwizard.Contracts.Services;
@@ -40,12 +41,15 @@ public partial class App : Application
 
     public static WindowEx MainWindow { get; } = new MainWindow();
 
-    public static UIElement? AppTitlebar { get; set; }
+    public static UIElement? AppTitlebar
+    {
+        get; set;
+    }
 
     public App()
     {
         InitializeComponent();
-        
+
         SetupSerilog();
 
         Host = Microsoft.Extensions.Hosting.Host.
@@ -94,19 +98,39 @@ public partial class App : Application
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
-        // TODO: Log and handle exceptions as appropriate.
-        // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        Log.Fatal(e.Exception, "Unhandled exception occurred");
+
+        // Try to show error in console/debug output since UI might not be available
+        System.Diagnostics.Debug.WriteLine($"Unhandled Exception: {e.Exception}");
+        Console.WriteLine($"Unhandled Exception: {e.Exception}");
     }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
 
-        // await App.GetService<IFfmpegDependencyService>().DownloadFfMpegIfNotExists();
-        await App.GetService<IArchiveService>().InitializeAsync();
-        await App.GetService<IActivationService>().ActivateAsync(args);
+        try
+        {
+            // await App.GetService<IFfmpegDependencyService>().DownloadFfMpegIfNotExists();
+            await App.GetService<IArchiveService>().InitializeAsync();
+            await App.GetService<IActivationService>().ActivateAsync(args);
 
-        await App.GetService<IVgmStreamService>().DownloadVgmStreamIfNotExists();
+            await App.GetService<IVgmStreamService>().DownloadVgmStreamIfNotExists();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Failed to launch application");
+
+            try
+            {
+                await App.GetService<IActivationService>().ActivateAsync(args);
+            }
+            catch
+            {
+                // Last resort: just activate the main window
+                MainWindow.Activate();
+            }
+        }
     }
 
     private void SetupSerilog()

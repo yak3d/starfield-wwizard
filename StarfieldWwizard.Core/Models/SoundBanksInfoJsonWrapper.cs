@@ -2,7 +2,10 @@
 
 public class SoundBanksInfoJsonWrapper
 {
-    public SoundBanksInfo SoundBanksInfo { get; init; }
+    public SoundBanksInfo SoundBanksInfo
+    {
+        get; init;
+    }
 }
 public class SoundBanksInfo
 {

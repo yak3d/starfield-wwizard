@@ -4,9 +4,17 @@ namespace StarfieldWwizard.Core.Models;
 
 public class WwiseStreamedFile
 {
-    public int Id { get; init; }
-    public string Language { get; init; }
-    public string ShortName { get;
+    public int Id
+    {
+        get; init;
+    }
+    public string Language
+    {
+        get; init;
+    }
+    public string ShortName
+    {
+        get;
         init;
     }
 

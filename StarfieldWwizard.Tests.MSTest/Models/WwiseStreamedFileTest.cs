@@ -17,7 +17,7 @@ public class WwiseStreamedFileTest
             Language = "SFX",
             ShortName = "AMB\\Artifact\\Puzzle\\Temple\\AMB_ArtifactPuzzle_TempleStart_01.wav"
         };
-        
+
         Assert.AreEqual("AMB_ArtifactPuzzle_TempleStart_01", test.SfxName);
     }
 }

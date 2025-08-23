@@ -38,7 +38,7 @@ public class StarfieldDataDirectoryService : IStarfieldDataDirectoryService
         var dirInfo = new DirectoryInfo(starfieldDataDirectory);
         if (dirInfo.Exists)
         {
-            await _localSettingsService.SaveSettingAsync(SettingsKey, starfieldDataDirectory);
+            await _localSettingsService.UpdateSettingAsync(s => s.StarfieldDataDirectory, starfieldDataDirectory);
         }
         else
         {
@@ -48,13 +48,13 @@ public class StarfieldDataDirectoryService : IStarfieldDataDirectoryService
 
     private async Task<string> LoadFromSettingsAsync()
     {
-        var path = await _localSettingsService.ReadSettingAsync<string>(SettingsKey);
+        var path = await _localSettingsService.GetSettingAsync(s => s.StarfieldDataDirectory);
 
-        if (Path.Exists(path))
+        if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
         {
             return path;
         }
-        
-        throw new FileNotFoundException($"The directory specified by {path} does not exist.");
+
+        return StarfieldDataDirectory;
     }
 }

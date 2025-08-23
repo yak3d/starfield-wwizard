@@ -6,7 +6,7 @@ public static class StringExtensions
     {
         if (!String.IsNullOrEmpty(str))
         {
-            int index = str.IndexOf(c);
+            var index = str.IndexOf(c);
 
             if (index > 0)
             {

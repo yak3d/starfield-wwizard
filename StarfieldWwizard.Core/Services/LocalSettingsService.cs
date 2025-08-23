@@ -1,11 +1,14 @@
-﻿using Microsoft.Extensions.Options;
-
+﻿using System.Linq.Expressions;
+using Microsoft.Extensions.Options;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Starfield;
 using StarfieldWwizard.Contracts.Services;
 using StarfieldWwizard.Core.Contracts.Services;
 using StarfieldWwizard.Core.Helpers;
+using StarfieldWwizard.Core.Models;
 using StarfieldWwizard.Helpers;
 using StarfieldWwizard.Models;
-
 using Windows.ApplicationModel;
 using Windows.Storage;
 
@@ -22,7 +25,7 @@ public class LocalSettingsService : ILocalSettingsService
     public readonly string ApplicationDataFolder;
     private readonly string _localsettingsFile;
 
-    private IDictionary<string, object> _settings;
+    private AppSettings _settings = new();
 
     private bool _isInitialized;
 
@@ -31,40 +34,69 @@ public class LocalSettingsService : ILocalSettingsService
         _fileService = fileService;
         _options = options.Value;
 
-        ApplicationDataFolder = AppPathHelper.DefaultApplicationDataFolder;
+        ApplicationDataFolder = AppPathHelper.ApplicationDataFolder;
         _localsettingsFile = _options.LocalSettingsFile ?? _defaultLocalSettingsFile;
-
-        _settings = new Dictionary<string, object>();
     }
 
     private async Task InitializeAsync()
     {
         if (!_isInitialized)
         {
-            _settings = await Task.Run(() => _fileService.Read<IDictionary<string, object>>(ApplicationDataFolder, _localsettingsFile)) ?? new Dictionary<string, object>();
+            _settings = await Task.Run(() => _fileService.Read<AppSettings>(ApplicationDataFolder, _localsettingsFile));
+
+            if (_settings == null)
+            {
+                _settings = new AppSettings();
+                await CreateDefaultSettingsAsync();
+            }
 
             _isInitialized = true;
         }
     }
 
-    public async Task<T?> ReadSettingAsync<T>(string key)
+    private async Task CreateDefaultSettingsAsync()
     {
-        await InitializeAsync();
-
-        if (_settings != null && _settings.TryGetValue(key, out var obj))
+        using (var env = GameEnvironment.Typical.Starfield(StarfieldRelease.Starfield))
         {
-            return await Json.ToObjectAsync<T>((string)obj);
+            _settings.StarfieldDataDirectory = env.DataFolderPath;
         }
 
-        return default;
+        await Task.Run(() => _fileService.Save(ApplicationDataFolder, _localsettingsFile, _settings));
     }
 
-    public async Task SaveSettingAsync<T>(string key, T value)
+
+    public async Task<AppSettings> GetSettingsAsync()
+    {
+        await InitializeAsync();
+        return _settings;
+    }
+
+    public async Task SaveSettingsAsync(AppSettings settings)
+    {
+        await InitializeAsync();
+        _settings = settings;
+        await Task.Run(() => _fileService.Save(ApplicationDataFolder, _localsettingsFile, _settings));
+    }
+
+    public async Task<T?> GetSettingAsync<T>(Expression<Func<AppSettings, T>> selector)
+    {
+        await InitializeAsync();
+        var compiled = selector.Compile();
+        return compiled(_settings);
+    }
+
+    public async Task UpdateSettingAsync<T>(Expression<Func<AppSettings, T>> selector, T value)
     {
         await InitializeAsync();
 
-        _settings[key] = await Json.StringifyAsync(value);
-
-        await Task.Run(() => _fileService.Save(ApplicationDataFolder, _localsettingsFile, _settings));
+        if (selector.Body is MemberExpression memberExpression)
+        {
+            var property = memberExpression.Member as System.Reflection.PropertyInfo;
+            if (property != null && property.CanWrite)
+            {
+                property.SetValue(_settings, value);
+                await Task.Run(() => _fileService.Save(ApplicationDataFolder, _localsettingsFile, _settings));
+            }
+        }
     }
 }

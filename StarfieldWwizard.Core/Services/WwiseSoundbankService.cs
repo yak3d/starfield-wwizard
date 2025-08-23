@@ -30,7 +30,8 @@ public class WwiseSoundbankService(IArchiveService archiveService) : IWwiseSound
                 filename,
                 fromArchive.Count()
             );
-        } else if (!fromArchive.Any())
+        }
+        else if (!fromArchive.Any())
         {
             throw new FileNotFoundException($"Unable to find sound file with name {filename}");
         }

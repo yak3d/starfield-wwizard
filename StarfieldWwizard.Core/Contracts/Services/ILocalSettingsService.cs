@@ -1,8 +1,15 @@
-﻿namespace StarfieldWwizard.Contracts.Services;
+using System.Linq.Expressions;
+using StarfieldWwizard.Core.Models;
+
+namespace StarfieldWwizard.Contracts.Services;
 
 public interface ILocalSettingsService
 {
-    Task<T?> ReadSettingAsync<T>(string key);
+    Task<AppSettings> GetSettingsAsync();
 
-    Task SaveSettingAsync<T>(string key, T value);
+    Task SaveSettingsAsync(AppSettings settings);
+
+    Task<T?> GetSettingAsync<T>(Expression<Func<AppSettings, T>> selector);
+
+    Task UpdateSettingAsync<T>(Expression<Func<AppSettings, T>> selector, T value);
 }

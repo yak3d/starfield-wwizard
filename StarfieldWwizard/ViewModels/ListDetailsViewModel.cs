@@ -1,10 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Media;
 using System.Windows.Input;
-using Windows.Media;
-using Windows.Media.Core;
-using Windows.Media.Playback;
-using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
@@ -17,6 +13,10 @@ using StarfieldWwizard.Core.Contracts.Services;
 using StarfieldWwizard.Core.Helpers;
 using StarfieldWwizard.Core.Models;
 using StarfieldWwizard.Models;
+using Windows.Media;
+using Windows.Media.Core;
+using Windows.Media.Playback;
+using Windows.Storage;
 
 namespace StarfieldWwizard.ViewModels;
 
@@ -26,19 +26,29 @@ public partial class ListDetailsViewModel : ObservableRecipient, INavigationAwar
     private readonly IWwiseSoundbankService _wwiseSoundbankService;
 
     [ObservableProperty]
-    private SampleOrder? selected;
-    
-    [ObservableProperty]
-    private string _searchText;
-    
-    [ObservableProperty]
-    private IMediaPlaybackSource? _playbackSource = null;
+    public partial SampleOrder? Selected
+    {
+        get;
+        set;
+    }
 
     [ObservableProperty]
-    private MediaPlayer _player = new();
+    public partial string SearchText
+    {
+        get;
+        set;
+    }
 
-    public ICommand PlaySfxCommand { get; }
-    
+    [ObservableProperty]
+    public partial IMediaPlaybackSource? PlaybackSource { get; set; } = null;
+
+    [ObservableProperty]
+    public partial MediaPlayer Player { get; set; } = new();
+    public ICommand PlaySfxCommand
+    {
+        get;
+    }
+
     public ObservableCollection<SampleOrder> SampleItems { get; private set; } = new();
     public List<SoundEffect> SfxFiles { get; private set; } = new();
     public ObservableCollection<SoundEffect> VisibleSfxFiles { get; private set; } = new();
@@ -75,12 +85,11 @@ public partial class ListDetailsViewModel : ObservableRecipient, INavigationAwar
                     var displayProps = wavMediaItem.GetDisplayProperties();
                     displayProps.Type = MediaPlaybackType.Music;
                     displayProps.MusicProperties.Title = param.SfxName;
-                    _player.Source = wavMediaItem;
-                    
-                    _player.Play();
+                    Player.Source = wavMediaItem;
+                    Player.Play();
                     //var soundPlayer = new SoundPlayer(pathToWav);
                     //soundPlayer.Play();
-                    
+
                     param.ButtonContent = new FontIcon()
                     {
                         Glyph = "\uF5B0",

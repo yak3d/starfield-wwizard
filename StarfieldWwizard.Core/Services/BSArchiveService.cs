@@ -11,8 +11,11 @@ namespace StarfieldWwizard.Core.Services;
 
 public class BSArchiveService(ILocalSettingsService settingsService) : IArchiveService
 {
-    private GameRelease _gameRelease = GameRelease.Starfield;
-    private string GameDataDir { get; set; }
+    private readonly GameRelease _gameRelease = GameRelease.Starfield;
+    private string GameDataDir
+    {
+        get; set;
+    }
     private IEnumerable<FilePath> ArchivePaths
     {
         get;
@@ -20,7 +23,7 @@ public class BSArchiveService(ILocalSettingsService settingsService) : IArchiveS
     }
 
     private IEnumerable<FilePath> GetAllArchives() => Archive.GetApplicableArchivePaths(GameRelease.Starfield, GameDataDir);
-    
+
     public IEnumerable<DataFile> GetContentByFilename(string filename) => ArchivePaths
         .Where(archive => archive.NameWithoutExtension.Contains("WwiseSounds", StringComparison.InvariantCultureIgnoreCase))
         .SelectMany(archive => Archive.CreateReader(_gameRelease, archive).Files.
@@ -49,7 +52,7 @@ public class BSArchiveService(ILocalSettingsService settingsService) : IArchiveS
 
     public async Task InitializeAsync()
     {
-        GameDataDir = await settingsService.ReadSettingAsync<string>("StarfieldDataDirectory");
+        GameDataDir = await settingsService.GetSettingAsync(s => s.StarfieldDataDirectory) ?? string.Empty;
         ArchivePaths = GetAllArchives();
         Archive.GetApplicableArchivePaths(_gameRelease, GameDataDir).ForEach(files =>
         {

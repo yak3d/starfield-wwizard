@@ -32,7 +32,7 @@ public partial class SoundEffect : ObservableObject
     {
         get;
         set;
-    // }
+        // }
     } = new FontIcon() { Glyph = "\uF5B0" };
 
     public string SfxName => Path.GetFileNameWithoutExtension(this.ShortName);
@@ -42,7 +42,7 @@ public partial class SoundEffect : ObservableObject
 
 public static class SoundEffectExtensions
 {
-    public static SoundEffect FromWwiseStreamedFile(this WwiseStreamedFile file) => new SoundEffect
+    public static SoundEffect FromWwiseStreamedFile(this WwiseStreamedFile file) => new()
     {
         Id = file.Id,
         Language = file.Language,

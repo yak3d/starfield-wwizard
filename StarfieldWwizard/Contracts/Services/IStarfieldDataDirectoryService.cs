@@ -2,8 +2,11 @@
 
 public interface IStarfieldDataDirectoryService
 {
-    string StarfieldDataDirectory { get; }
-    
+    string StarfieldDataDirectory
+    {
+        get;
+    }
+
     Task InitializeAsync();
 
     Task SetDataDirectoryAsync(string StarfieldDataDirectory);
