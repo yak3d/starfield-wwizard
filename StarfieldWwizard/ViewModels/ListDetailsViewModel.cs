@@ -22,7 +22,6 @@ namespace StarfieldWwizard.ViewModels;
 
 public partial class ListDetailsViewModel : ObservableRecipient, INavigationAware
 {
-    private readonly ISampleDataService _sampleDataService;
     private readonly IWwiseSoundbankService _wwiseSoundbankService;
 
     [ObservableProperty]
@@ -53,9 +52,8 @@ public partial class ListDetailsViewModel : ObservableRecipient, INavigationAwar
     public List<SoundEffect> SfxFiles { get; private set; } = new();
     public ObservableCollection<SoundEffect> VisibleSfxFiles { get; private set; } = new();
 
-    public ListDetailsViewModel(ISampleDataService sampleDataService, IWwiseSoundbankService wwiseSoundbankService)
+    public ListDetailsViewModel(IWwiseSoundbankService wwiseSoundbankService)
     {
-        _sampleDataService = sampleDataService;
         _wwiseSoundbankService = wwiseSoundbankService;
 
         PlaySfxCommand = new RelayCommand<SoundEffect>(
